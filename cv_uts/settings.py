@@ -108,6 +108,7 @@ STORAGES = {
             "region_name": "ap-southeast-1", # Sesuaikan dengan region Supabase Anda
             "default_acl": "public-read",
             "querystring_auth": False,
+            "custom_domain": "tdicqrfhnimxdxxkcvuy.supabase.co/storage/v1/object/public/media",
         },
     },
     "staticfiles": {
