@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="id" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Portofolio Dinamis{% endblock %}</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts untuk gaya editorial -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <!-- Google Fonts: 4 Gaya Karakter Kontras -->
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Oswald:wght@700&family=Playfair+Display:ital,wght@1,700&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Space+Mono:ital,wght@1,700&display=swap" rel="stylesheet">
+    
+    <script>
+    tailwind.config = {
+        theme: {
+            extend: {
+                fontFamily: {
+                    sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+                    serif: ['"Instrument Serif"', 'serif'],
+                    display: ['"Oswald"', 'sans-serif'],
+                    editorial: ['"Playfair Display"', 'serif'],
+                    mono: ['"Space Mono"', 'monospace'],
+                }
+            }
+        }
+    }
+</script>
+
+<!-- Devicon CDN untuk Logo Teknologi & Desain -->
+<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/devicon.min.css" />
+
+</head>
+<body class="bg-[#FAFAFA] text-[#111111] font-sans antialiased flex flex-col min-h-screen selection:bg-black selection:text-white">
+
+    <!-- Navbar Minimalis (Tanpa tombol Login untuk publik) -->
+    <nav class="bg-[#FAFAFA]/90 backdrop-blur-md sticky top-0 z-50 border-b border-neutral-200/70">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-20 items-center">
+                <!-- Logo / Brand Nama -->
+                <a href="{% url 'publik' %}" class="helvetica text-1xl sm:text-1xl tracking-tight text-black">
+                    {{ profil.nama_lengkap|default:"Portfolio." }}
+                </a>
+
+                <!-- Menu Tengah (Desktop) -->
+                <div class="hidden md:flex items-center space-x-8 text-xs font-medium uppercase tracking-widest text-neutral-600">
+                    <a href="{% url 'publik' %}#projects" class="hover:text-black transition">Proyek</a>
+                    <a href="{% url 'publik' %}#skills" class="hover:text-black transition">Keahlian</a>
+                    <a href="{% url 'publik' %}#about" class="hover:text-black transition">Tentang</a>
+                    <a href="{% url 'publik' %}#experience" class="hover:text-black transition">Pengalaman</a>
+                </div>
+
+                <!-- Tombol Kanan: Contact untuk publik, atau Dasbor/Keluar jika admin sedang login -->
+                <div class="flex items-center space-x-3">
+                    {% if user.is_authenticated %}
+                        <a href="{% url 'dasbor' %}" class="text-xs font-semibold bg-neutral-900 text-white px-4 py-2.5 rounded-full hover:bg-neutral-700 transition">Dasbor</a>
+                        <a href="{% url 'logout' %}" class="text-xs font-semibold border border-neutral-300 text-neutral-700 px-3.5 py-2.5 rounded-full hover:bg-neutral-200 transition">Keluar</a>
+                    {% else %}
+                        <a href="{% url 'publik' %}#contact" class="text-xs font-semibold bg-[#111111] text-white px-5 py-2.5 rounded-full hover:bg-neutral-800 transition">
+                            Contact
+                        </a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Notifikasi / Flash Messages -->
+    {% if messages %}
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 mt-4 w-full">
+        {% for message in messages %}
+        <div class="p-4 rounded-xl text-sm font-medium bg-neutral-900 text-white shadow-sm">
+            {{ message }}
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <!-- Konten Utama -->
+    <main class="flex-grow w-full">
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- Footer Monochrome -->
+    <footer class="border-t border-neutral-200 py-8 text-xs text-neutral-500 bg-white">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row justify-between items-center gap-4">
+            <p>&copy; 2026 {{ profil.nama_lengkap|default:"Portofolio Dinamis" }}. All Rights Reserved.</p>
+            <div class="flex space-x-6 font-medium text-neutral-700">
+                {% if profil.link_github %}<a href="{{ profil.link_github }}" target="_blank" class="hover:text-black">GitHub</a>{% endif %}
+                {% if profil.link_linkedin %}<a href="{{ profil.link_linkedin }}" target="_blank" class="hover:text-black">LinkedIn</a>{% endif %}
+                {% if profil.email %}<a href="mailto:{{ profil.email }}" class="hover:text-black">Email</a>{% endif %}
+            </div>
+        </div>
+    </footer>
+
+</body>
+</html>

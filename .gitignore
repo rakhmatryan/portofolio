@@ -1,0 +1,14 @@
+# Lingkungan Virtual
+venv/
+.venv/
+
+# File Rahasia / Kredensial Supabase
+.env
+
+# Cache Python & Mac
+__pycache__/
+*.py[cod]
+.DS_Store
+
+# Database Lokal (jika ada sisa)
+db.sqlite3

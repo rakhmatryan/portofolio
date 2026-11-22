@@ -1,0 +1,115 @@
+{% extends 'portofolio_app/base.html' %}
+{% block title %}Dasbor Admin — Kelola Portofolio{% endblock %}
+
+{% block content %}
+<div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
+    <div>
+        <h1 class="text-2xl font-bold text-slate-900">Dasbor Pengelola Portofolio</h1>
+        <p class="text-sm text-slate-500">Tambah, ubah, atau hapus informasi CV dinamis Anda.</p>
+    </div>
+    <a href="{% url 'kelola_profil' %}" class="bg-slate-900 text-white text-sm font-medium px-4 py-2.5 rounded-lg hover:bg-slate-800 transition">
+        ✏️ Edit Profil Utama
+    </a>
+</div>
+
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+    <!-- Manajemen Skills -->
+    <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200">
+        <div class="flex justify-between items-center mb-4">
+            <h2 class="font-bold text-lg">Skills</h2>
+            <a href="{% url 'tambah_data' 'skill' %}" class="bg-blue-600 text-white text-xs font-semibold px-3 py-1.5 rounded-lg hover:bg-blue-700">+ Tambah</a>
+        </div>
+        <div class="divide-y divide-slate-100">
+            {% for s in skills %}
+            <div class="py-3 flex justify-between items-center text-sm">
+                <span><strong>{{ s.nama_skill }}</strong> ({{ s.persentase }}%)</span>
+                <div class="flex items-center gap-2">
+                    <a href="{% url 'edit_data' 'skill' s.pk %}" class="text-amber-600 hover:underline">Edit</a>
+                    <form action="{% url 'hapus_data' 'skill' s.pk %}" method="POST" onsubmit="return confirm('Hapus skill ini?');">
+                        {% csrf_token %}
+                        <button type="submit" class="text-red-600 hover:underline">Hapus</button>
+                    </form>
+                </div>
+            </div>
+            {% empty %}<p class="text-xs text-slate-400">Belum ada data.</p>{% endfor %}
+        </div>
+    </div>
+
+    <!-- Manajemen Pendidikan -->
+    <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200">
+        <div class="flex justify-between items-center mb-4">
+            <h2 class="font-bold text-lg">Pendidikan</h2>
+            <a href="{% url 'tambah_data' 'pendidikan' %}" class="bg-blue-600 text-white text-xs font-semibold px-3 py-1.5 rounded-lg hover:bg-blue-700">+ Tambah</a>
+        </div>
+        <div class="divide-y divide-slate-100">
+            {% for p in pendidikan %}
+            <div class="py-3 flex justify-between items-center text-sm">
+                <div>
+                    <p class="font-semibold">{{ p.institusi }}</p>
+                    <p class="text-xs text-slate-500">{{ p.jurusan }} ({{ p.tahun_masuk }}-{{ p.tahun_lulus }})</p>
+                </div>
+                <div class="flex items-center gap-2">
+                    <a href="{% url 'edit_data' 'pendidikan' p.pk %}" class="text-amber-600 hover:underline">Edit</a>
+                    <form action="{% url 'hapus_data' 'pendidikan' p.pk %}" method="POST" onsubmit="return confirm('Hapus data pendidikan ini?');">
+                        {% csrf_token %}
+                        <button type="submit" class="text-red-600 hover:underline">Hapus</button>
+                    </form>
+                </div>
+            </div>
+            {% empty %}<p class="text-xs text-slate-400">Belum ada data.</p>{% endfor %}
+        </div>
+    </div>
+
+    <!-- Manajemen Pengalaman Kerja -->
+    <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200">
+        <div class="flex justify-between items-center mb-4">
+            <h2 class="font-bold text-lg">Pengalaman Kerja</h2>
+            <a href="{% url 'tambah_data' 'pengalaman' %}" class="bg-blue-600 text-white text-xs font-semibold px-3 py-1.5 rounded-lg hover:bg-blue-700">+ Tambah</a>
+        </div>
+        <div class="divide-y divide-slate-100">
+            {% for e in pengalaman %}
+            <div class="py-3 flex justify-between items-center text-sm">
+                <div>
+                    <p class="font-semibold">{{ e.posisi }}</p>
+                    <p class="text-xs text-slate-500">{{ e.perusahaan }}</p>
+                </div>
+                <div class="flex items-center gap-2">
+                    <a href="{% url 'edit_data' 'pengalaman' e.pk %}" class="text-amber-600 hover:underline">Edit</a>
+                    <form action="{% url 'hapus_data' 'pengalaman' e.pk %}" method="POST" onsubmit="return confirm('Hapus pengalaman ini?');">
+                        {% csrf_token %}
+                        <button type="submit" class="text-red-600 hover:underline">Hapus</button>
+                    </form>
+                </div>
+            </div>
+            {% empty %}<p class="text-xs text-slate-400">Belum ada data.</p>{% endfor %}
+        </div>
+    </div>
+
+    <!-- Manajemen Proyek -->
+    <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200">
+        <div class="flex justify-between items-center mb-4">
+            <h2 class="font-bold text-lg">Proyek</h2>
+            <a href="{% url 'tambah_data' 'proyek' %}" class="bg-blue-600 text-white text-xs font-semibold px-3 py-1.5 rounded-lg hover:bg-blue-700">+ Tambah</a>
+        </div>
+        <div class="divide-y divide-slate-100">
+            {% for pr in proyek %}
+            <div class="py-3 flex justify-between items-center text-sm">
+                <div>
+                    <p class="font-semibold">{{ pr.judul }}</p>
+                    <p class="text-xs text-slate-500">{{ pr.teknologi }}</p>
+                </div>
+                <div class="flex items-center gap-2">
+                    <a href="{% url 'edit_data' 'proyek' pr.pk %}" class="text-amber-600 hover:underline">Edit</a>
+                    <form action="{% url 'hapus_data' 'proyek' pr.pk %}" method="POST" onsubmit="return confirm('Hapus proyek ini?');">
+                        {% csrf_token %}
+                        <button type="submit" class="text-red-600 hover:underline">Hapus</button>
+                    </form>
+                </div>
+            </div>
+            {% empty %}<p class="text-xs text-slate-400">Belum ada data.</p>{% endfor %}
+        </div>
+    </div>
+
+</div>
+{% endblock %}

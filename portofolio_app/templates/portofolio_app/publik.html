@@ -1,0 +1,337 @@
+{% extends 'portofolio_app/base.html' %}
+{% block title %}{{ profil.nama_lengkap|default:"Portofolio Dinamis" }}{% endblock %}
+
+{% block content %}
+
+<!-- 1. HERO SECTION (Editorial Monochrome - Foto Tepat di Celah "Hey, there") -->
+<section class="relative overflow-hidden pt-10 pb-20 sm:pt-14 sm:pb-24 border-b border-neutral-200" 
+         style="background: radial-gradient(circle at 50% 45%, #E5E5E5 0%, #F5F5F5 45%, #FAFAFA 100%);">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 relative">
+        
+       <!-- Sapaan dengan Font yang Berubah-ubah -->
+<div id="dynamic-greeting" class="flex justify-center items-center gap-6 sm:gap-36 md:gap-52 lg:gap-64 relative z-20 pointer-events-none select-none font-serif italic transition-all duration-300">
+    <span class="text-5xl sm:text-7xl md:text-8xl lg:text-9xl text-neutral-900 tracking-tight">
+        Hey,
+    </span>
+    <span class="text-5xl sm:text-7xl md:text-8xl lg:text-9xl text-neutral-900 tracking-tight">
+        there
+    </span>
+</div>
+
+        <!-- Grid Tengah: Badge Kiri, Foto Profil Tengah (Ditarik ke Atas), Bio Kanan -->
+        <div class="grid grid-cols-1 md:grid-cols-12 items-center gap-8 relative z-10 -mt-8 sm:-mt-16 md:-mt-20 lg:-mt-24">
+            
+            <!-- Kiri: Status & Nama Besar -->
+            <div class="md:col-span-4 flex flex-col items-center md:items-start text-center md:text-left order-2 md:order-1 md:pt-12">
+                <div class="inline-flex items-center gap-2 bg-white/90 backdrop-blur border border-neutral-200 px-3.5 py-1.5 rounded-full text-xs font-medium text-neutral-700 shadow-sm mb-6">
+                    <span class="w-2 h-2 rounded-full bg-neutral-900 animate-pulse"></span>
+                    {{ profil.lokasi|default:"Available for new opportunities" }}
+                </div>
+                
+                <p class="font-display text-4xl sm:text-5xl lg:text-6xl font-bold uppercase leading-[0.95] tracking-tight text-neutral-950">
+                    I AM<br>{{ profil.nama_lengkap|default:"YOUR NAME" }}
+                </p>
+            </div>
+
+            <!-- Tengah: Foto Profil Tanpa Bingkai & Menyatu dengan Latar -->
+            <div class="md:col-span-4 flex justify-center order-1 md:order-2">
+                {% if profil.foto %}
+                    <div class="relative w-72 h-96 sm:w-80 sm:h-[430px] lg:w-96 lg:h-[480px] flex items-end justify-center">
+                        <img src="{{ profil.foto.url }}" alt="{{ profil.nama_lengkap }}" 
+                             class="w-full h-full object-contain object-bottom mix-blend-multiply grayscale contrast-110 hover:grayscale-0 transition duration-500"
+                             style="-webkit-mask-image: linear-gradient(to bottom, black 78%, transparent 100%); mask-image: linear-gradient(to bottom, black 78%, transparent 100%);">
+                    </div>
+                {% else %}
+                    <div class="w-64 h-80 sm:w-72 sm:h-96 rounded-2xl bg-neutral-900 text-white flex items-center justify-center font-display text-7xl">
+                        {{ profil.nama_lengkap|default:"P"|slice:":1" }}
+                    </div>
+                {% endif %}
+            </div>
+
+            <!-- Kanan: Deskripsi Singkat & Role -->
+            <div class="md:col-span-4 flex flex-col items-center md:items-end text-center md:text-right order-3 md:pt-12">
+                <p class="text-xs sm:text-sm text-neutral-600 max-w-xs leading-relaxed mb-6">
+                    {{ profil.bio|default:"Membangun solusi aplikasi web modern yang bersih, cepat, dan fungsional." }}
+                </p>
+                <p class="font-display text-2xl sm:text-3xl lg:text-4xl font-bold uppercase leading-none tracking-tight text-neutral-900">
+                    {{ profil.peran|default:"WEB DEVELOPER" }}
+                </p>
+                {% if profil.file_cv %}
+                <div class="mt-6">
+                    <a href="{{ profil.file_cv.url }}" download 
+                        class="inline-flex items-center gap-2 bg-[#111111] text-white text-xs font-semibold px-5 py-3 rounded-full hover:bg-neutral-800 transition shadow-sm">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                         </svg>
+                            Download CV (PDF)
+                    </a>
+                </div>
+{% endif %}
+            </div>
+
+        </div>
+    </div>
+</section>
+
+<!-- 2. RECENT PROJECTS (Bento Grid 2 Kolom + 1 Kartu Lebar) -->
+<section id="projects" class="py-20 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+    <h2 class="font-display text-3xl sm:text-5xl font-bold uppercase text-center tracking-tight text-neutral-950 mb-12">
+        RECENT PROJECTS
+    </h2>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+        {% for item in proyek %}
+        <!-- Setiap item ke-3 (kelipatan 3) melebar penuh 2 kolom seperti gambar referensi -->
+        <div class="group {% if forloop.counter|divisibleby:3 %}md:col-span-2{% endif %}">
+            <div class="bg-neutral-200 rounded-2xl overflow-hidden border border-neutral-200 aspect-[16/10] {% if forloop.counter|divisibleby:3 %}md:aspect-[21/9]{% endif %} relative">
+                {% if item.gambar %}
+                    <img src="{{ item.gambar.url }}" alt="{{ item.judul }}" 
+                         class="w-full h-full object-cover grayscale group-hover:grayscale-0 group-hover:scale-105 transition duration-500">
+                {% else %}
+                    <div class="w-full h-full flex items-center justify-center bg-neutral-900 text-neutral-400 font-display text-2xl tracking-wider uppercase">
+                        {{ item.judul }}
+                    </div>
+                {% endif %}
+            </div>
+            
+            <!-- Baris Info Bawah Kartu Proyek -->
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mt-4">
+                <div>
+                    <h3 class="font-bold text-lg text-neutral-950">{{ item.judul }}</h3>
+                    <p class="text-xs text-neutral-500 mt-0.5">{{ item.teknologi }} — {{ item.deskripsi|truncatewords:12 }}</p>
+                </div>
+                <div class="flex items-center gap-2 flex-shrink-0">
+                    {% if item.link_demo %}
+                        <a href="{{ item.link_demo }}" target="_blank" class="inline-flex items-center gap-1.5 text-xs font-semibold border border-neutral-300 bg-white px-4 py-2 rounded-full hover:bg-neutral-950 hover:text-white hover:border-neutral-950 transition">
+                            View Project <span>↗</span>
+                        </a>
+                    {% endif %}
+                    {% if item.link_github %}
+                        <a href="{{ item.link_github }}" target="_blank" class="inline-flex items-center gap-1.5 text-xs font-semibold border border-neutral-300 bg-white px-4 py-2 rounded-full hover:bg-neutral-950 hover:text-white hover:border-neutral-950 transition">
+                            GitHub <span>↗</span>
+                        </a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <div class="md:col-span-2 text-center py-12 border border-dashed border-neutral-300 rounded-2xl text-neutral-400 text-sm">
+            Belum ada proyek yang ditambahkan.
+        </div>
+        {% endfor %}
+    </div>
+</section>
+
+<!-- 3. I CAN HELP YOU WITH / SKILLS (Layout 4 Kolom Bernomor 01, 02, dst) -->
+<section id="skills" class="py-16 border-t border-neutral-200 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+    <h2 class="font-display text-3xl sm:text-5xl font-bold uppercase text-center tracking-tight text-neutral-950 mb-14">
+        SKILLS &amp; CAPABILITIES
+    </h2>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+    {% for skill in skills %}
+    <div class="border-l border-neutral-300 pl-6 py-2 flex flex-col justify-between group">
+        <div>
+            <!-- Baris Nomor & Logo Skill -->
+            <div class="flex items-center justify-between mb-6">
+                <span class="font-display text-3xl font-bold text-neutral-300">
+                    0{{ forloop.counter }}
+                </span>
+                
+                {% if "lightroom" in skill.nama_skill|lower or "lightroom" in skill.ikon|lower %}
+    <!-- Ikon SVG Adobe Lightroom Monochrome -->
+    <svg class="w-8 h-8 text-neutral-900 group-hover:scale-110 transition duration-300" viewBox="0 0 24 24" fill="currentColor">
+        <rect x="2" y="2" width="20" height="20" rx="4" />
+        <text x="12" y="16" font-family="sans-serif" font-weight="bold" font-size="10.5" fill="#FAFAFA" text-anchor="middle">Lr</text>
+    </svg>
+
+{% elif skill.ikon == "Davinci Resolve" %}
+    <!-- Ikon SVG DaVinci Resolve Monochrome -->
+    <svg class="w-8 h-8 text-neutral-900 group-hover:scale-110 transition duration-300" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <circle cx="12" cy="12" r="9.5" />
+        <circle cx="12" cy="7.5" r="2.2" fill="currentColor" />
+        <circle cx="8.1" cy="14.2" r="2.2" fill="currentColor" />
+        <circle cx="15.9" cy="14.2" r="2.2" fill="currentColor" />
+    </svg>
+
+{% elif skill.ikon %}
+    {% if "http" in skill.ikon %}
+        <img src="{{ skill.ikon }}" alt="{{ skill.nama_skill }}" 
+             class="w-7 h-7 object-contain grayscale contrast-125 group-hover:scale-110 transition duration-300">
+    {% else %}
+        <i class="{{ skill.ikon }} text-3xl text-neutral-800 group-hover:text-black group-hover:scale-110 transition duration-300"></i>
+    {% endif %}
+
+{% else %}
+    <!-- Inisial huruf default jika dikosongkan -->
+    <span class="w-8 h-8 rounded-full border border-neutral-300 flex items-center justify-center text-xs font-bold text-neutral-600">
+        {{ skill.nama_skill|slice:":2"|upper }}
+    </span>
+{% endif %}
+            </div>
+
+            <h3 class="font-bold text-base text-neutral-950 mb-2">{{ skill.nama_skill }}</h3>
+            <p class="text-xs text-neutral-500 leading-relaxed mb-4">
+                Tingkat penguasaan teknis sebesar {{ skill.persentase }}% dalam pengembangan dan implementasi proyek.
+            </p>
+        </div>
+        <!-- Progress Bar Monochrome Minimalis -->
+        <div class="w-full bg-neutral-200 h-1 rounded-full overflow-hidden">
+            <div class="bg-neutral-950 h-full" style="--p: {{ skill.persentase }}%; width: var(--p);"></div>
+        </div>
+    </div>
+    {% empty %}
+    <p class="col-span-full text-center text-sm text-neutral-400">Belum ada data keahlian.</p>
+    {% endfor %}
+</div>
+</section>
+
+<!-- 4. TURNING MY VISION / STATISTIK RINGKAS -->
+<section id="about" class="py-20 bg-neutral-100/80 border-y border-neutral-200">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+        <h2 class="font-display text-3xl sm:text-5xl font-bold uppercase text-center tracking-tight text-neutral-950 mb-14">
+            OVERVIEW &amp; MILESTONES
+        </h2>
+
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
+            <!-- Kiri: Angka Statistik Dinamis dari Database -->
+            <div class="lg:col-span-6 space-y-8">
+                <p class="text-sm sm:text-base font-medium text-neutral-800 max-w-md leading-relaxed">
+                    Merancang solusi digital yang terstruktur, efisien, dan berorientasi pada kebutuhan pengguna.
+                </p>
+
+                <div class="grid grid-cols-2 gap-8 pt-2">
+                    <div>
+                        <p class="font-display text-4xl sm:text-5xl font-bold text-neutral-950">{{ proyek.count }}+</p>
+                        <p class="text-xs text-neutral-500 mt-1">Completed Projects</p>
+                    </div>
+                    <div>
+                        <p class="font-display text-4xl sm:text-5xl font-bold text-neutral-950">{{ skills.count }}+</p>
+                        <p class="text-xs text-neutral-500 mt-1">Core Technologies</p>
+                    </div>
+                    <div>
+                        <p class="font-display text-4xl sm:text-5xl font-bold text-neutral-950">{{ pengalaman.count }}+</p>
+                        <p class="text-xs text-neutral-500 mt-1">Work Experiences</p>
+                    </div>
+                    <div>
+                        <p class="font-display text-4xl sm:text-5xl font-bold text-neutral-950">{{ pendidikan.count }}+</p>
+                        <p class="text-xs text-neutral-500 mt-1">Academic Records</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Kanan: Kartu Visual Monochrome -->
+            <div class="lg:col-span-6">
+                <div class="bg-neutral-900 text-white p-8 sm:p-10 rounded-3xl shadow-md">
+                    <p class="font-serif italic text-3xl text-neutral-300 mb-3">Philosophy</p>
+                    <p class="text-sm sm:text-base text-neutral-200 leading-relaxed">
+                        "{{ "Design can be art. Design can be aesthetics. Design is so simple, that's why it is so complicated." }}"
+                    </p>
+                    <div class="mt-6 pt-6 border-t border-neutral-800 flex justify-between items-center text-xs text-neutral-400">
+                        <span>{{ profil.nama_lengkap|default:"Developer" }}</span>
+                        <span>{{ profil.lokasi|default:"Indonesia" }}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- 5. EXPERIENCE & EDUCATION (Daftar Baris Horizontal seperti referensi) -->
+<section id="experience" class="py-20 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+    <h2 class="font-display text-3xl sm:text-5xl font-bold uppercase text-center tracking-tight text-neutral-950 mb-14">
+        EXPERIENCE &amp; EDUCATION
+    </h2>
+
+    <!-- Daftar Pengalaman Kerja -->
+    <div class="divide-y divide-neutral-200 border-y border-neutral-200">
+        {% for exp in pengalaman %}
+        <div class="py-8 grid grid-cols-1 md:grid-cols-12 gap-4 items-start md:items-center hover:bg-neutral-100/60 transition px-3 rounded-lg">
+            <div class="md:col-span-3 text-xs font-semibold uppercase tracking-wider text-neutral-500">
+                {{ exp.tahun_mulai }} — {{ exp.tahun_selesai }}
+            </div>
+            <div class="md:col-span-4">
+                <h3 class="font-bold text-lg text-neutral-950">{{ exp.posisi }}</h3>
+                <p class="text-xs font-medium text-neutral-500">{{ exp.perusahaan }}</p>
+            </div>
+            <div class="md:col-span-5 text-xs sm:text-sm text-neutral-600 leading-relaxed">
+                {{ exp.deskripsi }}
+            </div>
+        </div>
+        {% empty %}
+        <p class="py-8 text-center text-sm text-neutral-400">Belum ada data pengalaman kerja.</p>
+        {% endfor %}
+    </div>
+
+    <!-- Sub-bagian Pendidikan -->
+    <div class="mt-12">
+        <h3 class="text-xs font-bold uppercase tracking-widest text-neutral-400 mb-4">Academic Background</h3>
+        <div class="divide-y divide-neutral-200 border-y border-neutral-200">
+            {% for edu in pendidikan %}
+            <div class="py-6 grid grid-cols-1 md:grid-cols-12 gap-4 items-center px-3">
+                <div class="md:col-span-3 text-xs font-semibold text-neutral-500">
+                    {{ edu.tahun_masuk }} — {{ edu.tahun_lulus }}
+                </div>
+                <div class="md:col-span-5 font-bold text-base text-neutral-950">
+                    {{ edu.institusi }}
+                </div>
+                <div class="md:col-span-4 text-xs sm:text-sm text-neutral-600">
+                    {{ edu.jurusan }}
+                </div>
+            </div>
+            {% empty %}
+            <p class="py-6 text-center text-sm text-neutral-400">Belum ada data pendidikan.</p>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<!-- 6. CTA FOOTER SECTION ("LET'S TALK ABOUT YOUR PROJECT") -->
+<section id="contact" class="py-24 text-center px-4 border-t border-neutral-200"
+         style="background: radial-gradient(circle at 50% 80%, #E5E5E5 0%, #FAFAFA 70%);">
+    <div class="max-w-3xl mx-auto">
+        <h2 class="font-display text-4xl sm:text-6xl font-bold uppercase tracking-tight text-neutral-950 leading-none mb-6">
+            LET'S TALK ABOUT<br>YOUR PROJECT
+        </h2>
+        {% if profil.email %}
+            <a href="mailto:{{ profil.email }}" class="inline-block bg-[#111111] text-white text-xs font-semibold px-7 py-3.5 rounded-full hover:bg-neutral-800 transition shadow-sm">
+                Lets Get in Touch
+            </a>
+        {% else %}
+            <span class="inline-block bg-[#111111] text-white text-xs font-semibold px-7 py-3.5 rounded-full">
+                Get in touch
+            </span>
+        {% endif %}
+    </div>
+</section>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const greetingEl = document.getElementById("dynamic-greeting");
+        
+        // Daftar variasi kelas font Tailwind yang akan bergantian
+        const fontStyles = [
+            "font-serif italic",              // 1. Instrument Serif (Klasik Editorial)
+            "font-mono italic font-bold",     // 2. Space Mono (Nuansa Developer/Coding)
+            "font-display uppercase",         // 3. Oswald (Tegas & Tebal)
+            "font-editorial italic font-bold" // 4. Playfair Display (Elegan)
+        ];
+
+        let currentIndex = 0;
+
+        setInterval(() => {
+            // Hapus kelas font saat ini
+            const currentClasses = fontStyles[currentIndex].split(" ");
+            greetingEl.classList.remove(...currentClasses);
+
+            // Pindah ke indeks font berikutnya
+            currentIndex = (currentIndex + 1) % fontStyles.length;
+
+            // Terapkan kelas font yang baru
+            const nextClasses = fontStyles[currentIndex].split(" ");
+            greetingEl.classList.add(...nextClasses);
+        }, 1200); // Kecepatan perubahan dalam milidetik (1200ms = 1.2 detik)
+    });
+</script>
+
+{% endblock %}
