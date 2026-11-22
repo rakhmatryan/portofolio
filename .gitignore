@@ -12,3 +12,4 @@ __pycache__/
 
 # Database Lokal (jika ada sisa)
 db.sqlite3
+media/

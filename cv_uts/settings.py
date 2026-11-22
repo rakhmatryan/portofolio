@@ -11,8 +11,8 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-mp*6rxa&0-*n@s0-uqzdml^2*b-1xqt!gax&=le_=$!dfb&0^0')
 
-# Otomatis False saat berjalan di server Render, dan True saat di komputer lokal
-DEBUG = 'RENDER' not in os.environ
+DEBUG = 'VERCEL' not in os.environ
+ALLOWED_HOSTS = ['.vercel.app', '127.0.0.1', 'localhost']
 
 # Mengizinkan domain lokal maupun domain Render (*.onrender.com)
 ALLOWED_HOSTS = ['*']
@@ -26,6 +26,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'portofolio_app',
+    'storages'
 ]
 
 MIDDLEWARE = [
@@ -95,10 +96,24 @@ STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
-# Konfigurasi Media (Foto Profil, CV PDF & Media Proyek)
-MEDIA_URL = '/media/'
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
-
+# Konfigurasi Penyimpanan Media ke Supabase Storage (S3)
+STORAGES = {
+    "default": {
+        "BACKEND": "storages.backends.s3.S3Storage",
+        "OPTIONS": {
+            "access_key": os.environ.get("SUPABASE_S3_ACCESS_KEY_ID"),
+            "secret_key": os.environ.get("SUPABASE_S3_SECRET_ACCESS_KEY"),
+            "bucket_name": "media",
+            "endpoint_url": os.environ.get("SUPABASE_S3_ENDPOINT_URL"),
+            "region_name": "ap-southeast-1", # Sesuaikan dengan region Supabase Anda
+            "default_acl": "public-read",
+            "querystring_auth": False,
+        },
+    },
+    "staticfiles": {
+        "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
+    },
+}
 # Pengaturan Keamanan untuk Embed YouTube & Preview PDF
 SECURE_REFERRER_POLICY = "strict-origin-when-cross-origin"
 X_FRAME_OPTIONS = 'SAMEORIGIN'
