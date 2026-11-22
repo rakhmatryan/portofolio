@@ -15,7 +15,7 @@ DEBUG = 'VERCEL' not in os.environ
 ALLOWED_HOSTS = ['.vercel.app', '127.0.0.1', 'localhost']
 
 # Mengizinkan domain lokal maupun domain Render (*.onrender.com)
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ['.vercel.app', '127.0.0.1', 'localhost']
 
 # Application definition
 INSTALLED_APPS = [
@@ -94,7 +94,7 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+
 
 # Konfigurasi Penyimpanan Media ke Supabase Storage (S3)
 STORAGES = {
