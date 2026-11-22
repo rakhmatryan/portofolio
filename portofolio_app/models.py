@@ -1,5 +1,5 @@
 from django.db import models
-
+import re
 from django.db import models
 from django.core.validators import MinValueValidator, MaxValueValidator
 
@@ -45,13 +45,37 @@ class PengalamanKerja(models.Model):
     def __str__(self):
         return f"{self.posisi} - {self.perusahaan}"
 
+
 class Proyek(models.Model):
     judul = models.CharField(max_length=150)
     deskripsi = models.TextField()
     teknologi = models.CharField(max_length=150, help_text="Contoh: Django, Tailwind CSS, PostgreSQL")
     gambar = models.ImageField(upload_to='proyek/', blank=True, null=True)
+    video = models.FileField(
+        upload_to='proyek/video/', 
+        blank=True, 
+        null=True, 
+        help_text="Opsional: Unggah video demo (.mp4 / .webm)"
+    )
+    link_youtube = models.URLField(
+        blank=True, 
+        null=True, 
+        help_text="Opsional: Tautan YouTube (contoh: https://youtu.be/... atau youtube.com/watch?v=...)"
+    )
     link_demo = models.URLField(blank=True, null=True)
     link_github = models.URLField(blank=True, null=True)
+
+    def get_youtube_embed_url(self):
+        if not self.link_youtube:
+            return None
+        # Ekstrak 11 karakter ID video dari berbagai format URL YouTube
+        match = re.search(
+            r'(?:youtube\.com\/(?:watch\?v=|embed\/|shorts\/)|youtu\.be\/)([a-zA-Z0-9_-]{11})',
+            self.link_youtube
+        )
+        if match:
+            return f"https://www.youtube.com/embed/{match.group(1)}"
+        return None
 
     def __str__(self):
         return self.judul

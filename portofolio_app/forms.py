@@ -49,12 +49,14 @@ class ProyekForm(forms.ModelForm):
         model = Proyek
         fields = '__all__'
         widgets = {
-            'judul': forms.TextInput(attrs={'class': INPUT_CLASS, 'placeholder': 'Nama proyek'}),
+            'judul': forms.TextInput(attrs={'class': INPUT_CLASS}),
             'deskripsi': forms.Textarea(attrs={'class': INPUT_CLASS, 'rows': 3}),
-            'teknologi': forms.TextInput(attrs={'class': INPUT_CLASS, 'placeholder': 'Django, Tailwind CSS, Supabase'}),
-            'gambar': forms.ClearableFileInput(attrs={'class': FILE_CLASS}),
-            'link_demo': forms.URLInput(attrs={'class': INPUT_CLASS, 'placeholder': 'https://...'}),
-            'link_github': forms.URLInput(attrs={'class': INPUT_CLASS, 'placeholder': 'https://github.com/...'}),
+            'teknologi': forms.TextInput(attrs={'class': INPUT_CLASS}),
+            'gambar': forms.ClearableFileInput(attrs={'class': FILE_CLASS, 'accept': 'image/*'}),
+            'video': forms.ClearableFileInput(attrs={'class': FILE_CLASS, 'accept': 'video/mp4,video/webm'}),
+            'link_youtube': forms.URLInput(attrs={'class': INPUT_CLASS, 'placeholder': 'https://www.youtube.com/watch?v=...'}),
+            'link_demo': forms.URLInput(attrs={'class': INPUT_CLASS}),
+            'link_github': forms.URLInput(attrs={'class': INPUT_CLASS}),
         }
 
 class PendidikanForm(forms.ModelForm):
