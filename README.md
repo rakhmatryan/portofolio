@@ -70,41 +70,68 @@ PemWebUTS/
 ├── requirements.txt            # Daftar dependensi Python
 ├── vercel.json                 # Konfigurasi build & routing Vercel
 └── .gitignore                  # Pengecualian file sensitif (.env, venv, media lokal)
+'''
 
+---
 
 # ⚙️ Panduan Instalasi & Menjalankan Secara Lokal
+    '''text
     git clone [https://github.com/rakhmatryan/portofolio.git](https://github.com/rakhmatryan/portofolio.git)
     cd portofolio
+    '''
+---
 
 2. Buat dan Aktifkan Virtual Environment
-
+'''text
 macOS / Linux: 
     python3 -m venv venv
     source venv/bin/activate
-
+'''
+---
 Windows :
+'''text    
     python -m venv venv
     venv\Scripts\activate
-
+'''
+---
 3. Install Dependesi
+'''text
     pip install -r requirements.txt
+'''
+
+---
 
 4. Konfigurasi Environment Variables (.env)
-
+'''text
 Buat file .env di direktori utama proyek (sejajar dengan manage.py) dan isi kredensial berikut:
+'''
 
-SECRET_KEY=isi_dengan_random_secret_key_django_anda
+---
+
+SECRET_KEY=isi_dengan_random_secret_key_django_anda :
+'''text
     DATABASE_URL=postgresql://user:password@host:5432/postgres
     SUPABASE_S3_ACCESS_KEY_ID=isi_access_key_id_supabase
     SUPABASE_S3_SECRET_ACCESS_KEY=isi_secret_access_key_supabase
     SUPABASE_S3_ENDPOINT_URL=https://[ID_PROYEK].supabase.co/storage/v1/s3
+'''
+
+---
 
 5. Migrasi Database & Buat Akun Admin
+'''text
     python manage.py migrate
     python manage.py createsuperuser
+'''
+
+---
 
 6. Jalankan Server Pengembangan
+'''text
     python manage.py runserver
+'''
+
+---
 
 Akses halaman publik di http://127.0.0.1:8000/ dan halaman login dasbor di http://127.0.0.1:8000/login/.
 
